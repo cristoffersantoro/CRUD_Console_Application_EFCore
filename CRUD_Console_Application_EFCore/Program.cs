@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace CRUD_Console_Application_EFCore
 {
@@ -6,7 +9,24 @@ namespace CRUD_Console_Application_EFCore
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using(var context = new CustomerDbContext())
+            {
+                var customer = new Customer()
+                {
+                    FirstName = "Cristoffer",
+                    LastName = "Santoro",
+                    Email = "cristoffer.santoro@example.com",
+                    Password = Encoding.UTF8.EncodeBase64("!@CSANTORo")
+                };
+
+                context.Customers.Add(customer);
+                context.SaveChanges();
+
+                var retorno = context.Customers.ToList();
+
+                Console.WriteLine(JsonConvert.SerializeObject(retorno));
+            }
+            
         }
     }
 }
